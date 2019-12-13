@@ -1,0 +1,6 @@
+<div class="ms-app">
+<ms-sidenav></ms-sidenav>
+
+<ms-campaign-wizard #wiz [campaign]="fromBackend" [loading]="loading" (onSave)="save($event)"></ms-campaign-wizard>
+<div>{{wiz.campaign | json}}</div>
+</div>

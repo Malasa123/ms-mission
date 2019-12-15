@@ -19,7 +19,7 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
   readonly LAST_STEP = 2;
 
   @Input() isLinear = false;
-  @Input() loading:boolean = false;
+  @Input() loading: boolean = false;
   @Output() onSave = new EventEmitter<ICampaign>();
   @Input() campaign: ICampaign = {
     dateRange: {
@@ -29,7 +29,7 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
   };
 
 
-  toggleLoading(){
+  toggleLoading() {
     this.loading = !this.loading;
   }
 
@@ -41,7 +41,7 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
     this.filteredDevices = this.deviceCtrl.valueChanges.pipe(
       startWith(null),
       map((device: string | null) => device ? this._filter(device) : this.avaliableDevices.slice()));
-   }
+  }
 
 
   ngOnInit() {
@@ -51,13 +51,12 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
   submit() {
     const { name, bid, dailyBudget, startDate, endDate } = this.form.value;
     let campaignToSave: ICampaign = {
-      name, bid, dailyBudget, 
+      name, bid, dailyBudget,
       dateRange: {
         end: endDate,
         start: startDate
       }
     }
-    console.log(campaignToSave);
     this.onSave.emit(campaignToSave);
   }
 
@@ -67,8 +66,8 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
       name: [this.campaign.name, Validators.required],
       bid: [this.campaign.bid, Validators.required],
       dailyBudget: [this.campaign.dailyBudget, Validators.required],
-      startDate: [this.campaign.dateRange.start, Validators.required],
-      endDate: [this.campaign.dateRange.end, Validators.required]
+      startDate: [this.campaign.dateRange ? this.campaign.dateRange.start : '', Validators.required],
+      endDate: [this.campaign.dateRange ? this.campaign.dateRange.end : '', Validators.required]
     });
   }
 
@@ -82,8 +81,8 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
 
   }
 
-  get campainDetails(){
-    return  this.form.value;
+  get campainDetails() {
+    return this.form.value;
   }
 
 
@@ -104,10 +103,10 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
   deviceCtrl = new FormControl();
   filteredDevices: Observable<string[]>;
   devices: string[] = ['Mobile'];
-  @Input() avaliableDevices:Array<string> = ['Mobile', 'Tablet', 'Desktop'];
+  @Input() avaliableDevices: Array<string> = ['Mobile', 'Tablet', 'Desktop'];
 
-  @ViewChild('deviceInput', {static: false}) deviceInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
+  @ViewChild('deviceInput', { static: false }) deviceInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 
 
   add(event: MatChipInputEvent): void {

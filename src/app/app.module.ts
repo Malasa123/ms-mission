@@ -1,13 +1,13 @@
+import { environment } from './../environments/environment';
+import { LoginModule } from './views/login/login.module';
+import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LayoutModule } from './common/components/layout/layout.module';
-import { CampaignWizardModule } from './common/components/campaign-wizard/campaign-wizard.module';
-import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
-import {HttpClientModule } from '@angular/common/http';
+import { SharedModule } from './shared/shared.module';
+import { HomeModule } from './views/home/home.module';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 
 @NgModule({
@@ -15,13 +15,13 @@ import {HttpClientModule } from '@angular/common/http';
     AppComponent
   ],
   imports: [
+    SharedModule,
     BrowserModule,
-    AppRoutingModule,
-    LayoutModule,
-    HttpClientModule,
-    CampaignWizardModule,
-    MatNativeDateModule,
-    BrowserAnimationsModule
+    RouterModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
+    HomeModule,
+    LoginModule
   ],
   providers: [],
   bootstrap: [AppComponent]

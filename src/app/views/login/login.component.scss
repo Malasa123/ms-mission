@@ -1,0 +1,34 @@
+.login-container{
+    height:100%;
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    mat-card{
+        height: 320px;
+        width: 295px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        mat-card-header .mat-card-header-text{
+            margin: 0;
+        }
+        mat-form-field{
+            width:100%;
+        }
+        .mat-card-actions{
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+
+            mat-error{
+                text-align: center;
+                padding: 4px 0;
+            }
+        }
+    }
+
+
+
+}

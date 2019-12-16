@@ -2,7 +2,7 @@ import { AuthService } from './../../common/services/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -12,9 +12,8 @@ import { Route, Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit,OnDestroy {
   loginForm: FormGroup;
-  hide = true;
-
   subscriptions: Subscription = new Subscription();
+  hide = true;
   error: any = null;
   loading:boolean = false;
 
@@ -28,7 +27,7 @@ export class LoginComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
     this.loginForm = this._formBuilder.group({
-      email: ['', Validators.email],
+      email: ['', [Validators.required , Validators.email]],
       password: ['', Validators.required]
      });
   }
@@ -37,10 +36,8 @@ export class LoginComponent implements OnInit,OnDestroy {
     this.loading = true;
     this.error = null;
     let sub = this.auth.login(this.loginForm.value).subscribe((response) =>{
-      alert(response.user.email);
       this.loading = false;
       this.router.navigate(['/home/campaigns']);
-
     },
     error=>{
      this.error = error;

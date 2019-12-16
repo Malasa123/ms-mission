@@ -1,4 +1,4 @@
-<div class="home-container">
+<!-- <div class="home-container">
         <ms-sidenav></ms-sidenav>
 
 
@@ -20,4 +20,32 @@
 
 
 
-</div>
+</div> -->
+
+      <mat-drawer-container class="home-container" [ngClass]="{'small-screen': isSmallScreen}">
+        <mat-drawer [mode]="isSmallScreen ? 'over' : 'side'" #sidenav >
+                <mat-nav-list color="primary">
+                        <a mat-list-item [routerLink]="'campaign'">
+                            <mat-icon >add</mat-icon>
+                            <span class="link-label">Create campaign</span>
+                       </a>
+                        <a mat-list-item [routerLink]="'campaigns'">
+                            <mat-icon>view_list</mat-icon>
+                            <span class="link-label">Campaigns</span>
+                       </a>
+                      </mat-nav-list>
+        </mat-drawer>
+        <mat-drawer-content>
+                <mat-toolbar>
+                        <mat-toolbar-row>
+                                <mat-icon *ngIf="isSmallScreen"   (click)="sidenav.open()" aria-label="open side navbar">menu</mat-icon>
+                            <span class="spacer"></span>
+                            <span class="email-display">{{(auth.currentUser | async)?.email}}</span>
+                            <mat-icon aria-hidden="false" title="Sign out" (click)="signOut()" aria-label="Sign out">exit_to_app</mat-icon>
+                        </mat-toolbar-row>
+                
+                    </mat-toolbar>
+               <div class="page-content">
+                        <router-outlet></router-outlet>
+                </div>        </mat-drawer-content>
+      </mat-drawer-container>

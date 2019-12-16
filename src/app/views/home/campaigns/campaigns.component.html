@@ -1,5 +1,58 @@
 
 
 <div class="campaigns-table">
-        <p>campaigns works!</p>
-</div>
+        <mat-toolbar color="primary">
+                        <mat-toolbar-row >
+                                        <span>Campaigns</span>
+                                        <span class="spacer"></span>
+                                        <span class="email-display" (click)="add()">item number:{{campgains.length}}</span>
+                                    </mat-toolbar-row>
+        </mat-toolbar>
+ 
+                <table mat-table [dataSource]="campaigns$ |async " class="mat-elevation-z8">
+
+                                                                                                                                    <!-- Name Column -->
+                                              <ng-container matColumnDef="ID">
+                                                        <th mat-header-cell *matHeaderCellDef> ID </th>
+                                                        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                                                      </ng-container>
+                                              <!-- Name Column -->
+                                              <ng-container matColumnDef="name">
+                                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                              </ng-container>
+                                            
+                                              <!-- Weight Column -->
+                                              <ng-container matColumnDef="bid">
+                                                <th mat-header-cell *matHeaderCellDef> bid </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.bid}} </td>
+                                              </ng-container>
+                                            
+                                              <!-- Symbol Column -->
+                                              <ng-container matColumnDef="dailyBudget">
+                                                <th mat-header-cell *matHeaderCellDef> Daily Budget</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.dailyBudget}} </td>
+                                              </ng-container>
+                                              <!-- Status Column -->
+                                              <ng-container matColumnDef="start">
+                                                <th mat-header-cell *matHeaderCellDef> Start at </th>
+                                                <td mat-cell *matCellDef="let element"> {{element?.dateRange?.start?.seconds | date : 'dd/MM/yy'}} </td>
+                                              </ng-container>
+                                              <!-- Status Column -->
+                                              <ng-container matColumnDef="end">
+                                                <th mat-header-cell *matHeaderCellDef> Expired at </th>
+                                                <td mat-cell *matCellDef="let element"> {{element?.dateRange?.end?.seconds | date : 'dd/MM/yy'}} </td>
+                                              </ng-container>
+                                              <!-- Actions Column -->
+                                              <ng-container matColumnDef="actions">
+                                                <th mat-header-cell *matHeaderCellDef></th>
+                                                <td mat-cell *matCellDef="let element">
+                                                        <mat-icon (click)="editCampaign(element)">edit</mat-icon>
+                                                </td>
+                                              </ng-container>
+
+                              
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                              </table>
+                              </div>

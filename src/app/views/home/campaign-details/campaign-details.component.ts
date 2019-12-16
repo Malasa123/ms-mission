@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ICampaign } from 'src/app/common/interfaces/campaign.model';
-import { CampaignService } from 'src/app/common/components/campaign-wizard/campaign.service';
-import { ComponentEditor } from 'src/app/common/interfaces/editor.model';
-import { Subscription } from 'rxjs';
-import { ToasterService } from 'src/app/common/services/toaster.service';
+import { ICampaign } from '../../../common/interfaces/campaign.model';
+import { ComponentEditor } from '../../../common/interfaces/editor.model';
+import { Subscription, Observable } from 'rxjs';
+import { ToasterService } from '../../../common/services/toaster.service';
+import { CampaignService } from '../../../common/services/campaign.service';
+import { Router, Route, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ms-campaign-details',
@@ -15,15 +16,37 @@ export class CampaignDetailsComponent extends ComponentEditor<ICampaign> impleme
   loading: boolean = false;
   fromBackend: ICampaign = {};
   subscriptions: Subscription = new Subscription();
+  avaliableDevices$: Observable<Array<string>>;
+  campaignToUpdate: ICampaign;
 
-  constructor(private cs: CampaignService ,private toasterService: ToasterService) {
+  constructor(private cs: CampaignService, private toasterService: ToasterService, private route: ActivatedRoute
+
+  ) {
     super();
   }
   ngOnInit(): void {
-    let sub = this.cs.read('').subscribe(campaign => {
-      this.fromBackend = campaign;
-      this.loading = false;
-      this.toasterService.success('Campaign was created successfully');
+    // this.avaliableDevices$ = this.ds.readAllAsync();
+    // let sub = this.ds.create('Mobile').subscribe(campaign => {
+    // });
+    // let sub = this.cs.readAll('').subscribe(campaign => {
+    //   this.fromBackend = campaign;
+    //   this.loading = false;
+    //   this.toasterService.success('Campaign was created successfully');
+    // });
+    //  this.subscriptions.add(sub);
+    let sub = this.route.params.subscribe(params => {
+      const id = params['id'] as string;
+      if (id) this.fetchCampain(id);
+    });
+    this.subscriptions.add(sub);
+
+  }
+  fetchCampain(id: string) {
+    debugger
+    let sub = this.cs.read(id).subscribe(campaignToUpdate => {
+      this.fromBackend = { ...campaignToUpdate };
+      this.campaignToUpdate = { ...campaignToUpdate };
+      this.isEditing = true;
     });
     this.subscriptions.add(sub);
   }
@@ -34,11 +57,28 @@ export class CampaignDetailsComponent extends ComponentEditor<ICampaign> impleme
 
   onCreate(item: ICampaign) {
     this.loading = true;
-    this.cs.post(item);
+    let sub = this.cs.create(item).subscribe(ok => {
+      this.fromBackend = item;
+      this.loading = false;
+      this.toasterService.success('Campaign was created successfully');
+    }, (error) => {
+      this.toasterService.success('Failed to create campaign');
+      this.loading = false;
+    });
+    this.subscriptions.add(sub);
   }
 
   onUpdate(item: ICampaign) {
-    this.fromBackend = item;
+    this.loading = true;
+    let sub = this.cs.update({ ...this.campaignToUpdate, ...item }).subscribe(ok => {
+      this.fromBackend = item;
+      this.loading = false;
+      this.toasterService.success('Campaign was updated successfully');
+    }, (error) => {
+      this.toasterService.success('Failed to update campaign');
+      this.loading = false;
+    });
+    this.subscriptions.add(sub);
   }
 
 

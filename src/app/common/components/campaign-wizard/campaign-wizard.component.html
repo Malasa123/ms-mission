@@ -1,149 +1,134 @@
-
-
-         <mat-card class="wizard-container">
-                <mat-toolbar color="primary">            
-                        <mat-toolbar-row>
-                          <span>Create campaign</span>
-                          <!-- <span class="spacer"></span>
+<mat-card class="wizard-container">
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span>Create campaign</span>
+      <!-- <span class="spacer"></span>
                           
                                <button mat-icon-button >
                                 <mat-icon>add</mat-icon>
                               </button> -->
-                        </mat-toolbar-row>
-                      </mat-toolbar>
-                <mat-horizontal-stepper [linear]="isLinear" [formGroup]="form" #stepper>
-                           <mat-step  [stepControl]="form">
-                                <ng-template matStepLabel>Targeting</ng-template>
-                    
-                                <form [formGroup]="form">
-                    
-                           <p>
-                            <mat-form-field appearance="legacy" >
-                              <input matInput placeholder="Campaign name" formControlName="name" required>
-                              <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-                            </mat-form-field>
-                          </p>
-                    
-                           <p>
-                            <mat-form-field appearance="legacy" >
-                                    <input matInput placeholder="Daily Budget" type="number" formControlName="dailyBudget" class="example-right-align">
-                                    <mat-icon matPrefix>attach_money</mat-icon>
-                                    <span matSuffix>.00</span>
-                            </mat-form-field>
-                          </p>
-                          <p>
-                                <mat-form-field appearance="legacy" >
-                                  <input matInput placeholder="Bid(Maximum CPC)" type="number" formControlName="bid" class="example-right-align">
-                                  <mat-icon matPrefix>attach_money</mat-icon>
-                                  <span matSuffix>.00</span>
-                                </mat-form-field>
-                              </p>
-                           <p>
-                                <mat-form-field appearance="legacy">
-                                        <input matInput [matDatepicker]="pickerStart" formControlName="startDate" >
-                                        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-                                        <mat-datepicker #pickerStart></mat-datepicker>
-                                      </mat-form-field>
-                          </p>
-                           <p>
-                            <mat-form-field appearance="legacy" >
-                              <input matInput [matDatepicker]="pickerEnd" formControlName="endDate" >
-                              <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-                              <mat-datepicker #pickerEnd></mat-datepicker>
-                            </mat-form-field>
-                          </p>
-                        </form>
-                    
-                            </mat-step>
-                     
-                            <mat-step [stepControl]="form">
-                              <form [formGroup]="form">
-                                <ng-template matStepLabel>Segments</ng-template>
-                                <mat-form-field>
-                                  
-                                        <mat-chip-list #chipList aria-label="device selection">
-                                                <mat-chip
-                                                  *ngFor="let device of devices"
-                                                  [selectable]="selectable"
-                                                  [removable]="removable"
-                                                  (removed)="remove(device)">
-                                                  {{device}}
-                                                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                </mat-chip>
-                                                <input
-                                                  placeholder="New device..."
-                                                  #deviceInput
-                                                  [matAutocomplete]="auto"
-                                                  [matChipInputFor]="chipList"
-                                                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                                  [matChipInputAddOnBlur]="addOnBlur"
-                                                  (matChipInputTokenEnd)="add($event)">
-                                              </mat-chip-list>
-                                              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                                                <mat-option *ngFor="let device of filteredDevices | async" [value]="device">
-                                                  {{device}}
-                                                </mat-option>
-                                              </mat-autocomplete>
-                                </mat-form-field>
-                                <div>
-                                  <button mat-button matStepperPrevious>Back</button>
-                                  <button mat-button matStepperNext>Next</button>
-                                </div>
-                              </form>
-                            </mat-step>
-                            <mat-step>
-                              <ng-template matStepLabel>Summery</ng-template>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-horizontal-stepper [linear]="isLinear" [formGroup]="form" #stepper>
+    <mat-step [stepControl]="form">
+      <ng-template matStepLabel>Targeting</ng-template>
 
-                              <div>
-                                      <mat-list>
-                                               <mat-list-item>
-                                                    <h4>{{campainDetails.name}}</h4>
-                                                    <mat-divider></mat-divider>
-                                                </mat-list-item>
-                                        <mat-list-item>
-                                                <span class="spacer">Daily budeget:</span>
-                                                <span>{{campainDetails.dailyBudget}}</span>
-                                            </mat-list-item>
-                                            <mat-list-item>
-                                                <span class="spacer">Bid:</span>
-                                                <span>{{campainDetails.bid}}</span>
-                                            </mat-list-item>
-                                            <mat-list-item>
-                                                <span class="spacer">Starts at:</span>
-                                                <span>{{campainDetails.startDate | date : 'dd/MM/yy'}}</span>
-                                            </mat-list-item>
-                                            <mat-list-item>
-                                                <span class="spacer">Expired:</span>
-                                                <span>{{campainDetails.endDate | date : 'dd/MM/yy'}}</span>
-                                            </mat-list-item>
-                                      </mat-list>
-                                  <ul>
+      <form [formGroup]="form" class="targeting">
 
-                                  </ul>
-                              </div>
-                            </mat-step>
-                    
-                          </mat-horizontal-stepper>
+        <p>
+          <mat-form-field appearance="legacy">
+            <input matInput placeholder="Campaign name" formControlName="name" required>
+            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+          </mat-form-field>
+        </p>
 
-                          <mat-card-actions>
-                                <button mat-button *ngIf="stepper.selectedIndex !== FIRST_STEP" (click)="stepper.previous()">Back</button>
-                                <button mat-button color="primary" (click)="toggleLoading()">TOGGLE</button>
+        <p>
+          <mat-form-field appearance="legacy">
+            <input matInput placeholder="Daily Budget" type="number" formControlName="dailyBudget"
+              class="example-right-align">
+            <mat-icon matPrefix>attach_money</mat-icon>
+            <span matSuffix>.00</span>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="legacy">
+            <input matInput placeholder="Bid(Maximum CPC)" type="number" formControlName="bid"
+              class="example-right-align">
+            <mat-icon matPrefix>attach_money</mat-icon>
+            <span matSuffix>.00</span>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="legacy">
+            <input matInput placeholder="Start Date" [matDatepicker]="pickerStart" formControlName="startDate">
+            <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+            <mat-datepicker #pickerStart></mat-datepicker>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="legacy">
+            <input matInput placeholder="End Date" [matDatepicker]="pickerEnd" formControlName="endDate">
+            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEnd></mat-datepicker>
+          </mat-form-field>
+        </p>
+      </form>
 
-                                <span class="spacer"></span>
-                                <button mat-button 
-                                 *ngIf="stepper.selectedIndex !== LAST_STEP; else save"
-                                 (click)="stepper.next()">Next</button>
-                                <ng-template #save>
-                                        <button mat-button color="primary" [disabled]="!form.valid || loading" (click)="submit()">
-                                                <span *ngIf="!loading; else loader">Save</span>
-                                                <ng-template #loader>
-                                                        <mat-spinner [diameter]="20"></mat-spinner>
-                                                </ng-template>
-                                        </button>
-                                </ng-template>
+    </mat-step>
+
+    <mat-step [stepControl]="form">
+      <form [formGroup]="form">
+        <ng-template matStepLabel>Segments</ng-template>
+        <mat-form-field>
+
+          <mat-chip-list #chipList aria-label="device selection">
+            <mat-chip *ngFor="let device of devices" [selectable]="selectable" [removable]="removable"
+              (removed)="remove(device)">
+              {{device}}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="New device..." #deviceInput [matAutocomplete]="auto" [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+              (matChipInputTokenEnd)="add($event)">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let device of filteredDevices | async" [value]="device">
+              {{device}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Summery</ng-template>
+
+      <div>
+        <mat-list>
+          <mat-list-item>
+            <h4>{{campainDetails.name}}</h4>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+          <mat-list-item>
+            <span class="spacer">Daily budeget:</span>
+            <span>{{campainDetails.dailyBudget}}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span class="spacer">Bid:</span>
+            <span>{{campainDetails.bid}}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span class="spacer">Starts at:</span>
+            <span>{{campainDetails.startDate | date : 'dd/MM/yy'}}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span class="spacer">Expired:</span>
+            <span>{{campainDetails.endDate | date : 'dd/MM/yy'}}</span>
+          </mat-list-item>
+        </mat-list>
+        <ul>
+
+        </ul>
+      </div>
+    </mat-step>
+
+  </mat-horizontal-stepper>
+
+  <mat-card-actions>
+    <button mat-button *ngIf="stepper.selectedIndex !== FIRST_STEP" (click)="stepper.previous()">Back</button>
+
+    <span class="spacer"></span>
+    <button mat-button *ngIf="stepper.selectedIndex !== LAST_STEP; else save" (click)="stepper.next()">Next</button>
+    <ng-template #save>
+      <button mat-button color="primary" [disabled]="!form.valid || loading" (click)="submit()">
+        <span *ngIf="!loading; else loader">Save</span>
+        <ng-template #loader>
+          <mat-spinner [diameter]="20"></mat-spinner>
+        </ng-template>
+      </button>
+    </ng-template>
 
 
-                                
-                              </mat-card-actions>
-          </mat-card>
 
+  </mat-card-actions>
+</mat-card>

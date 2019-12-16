@@ -1,30 +1,65 @@
-.wizard-container{
-    height: 100%;
-    padding: 0;
-    .mat-form-field-type-mat-chip-list{
-        width:100%;
-        .mat-chip.mat-standard-chip{
-            min-height: 25px;
-            font-size: 13px;
-        }
-    }
-    .spacer{
-        flex: 1 1 auto;
-    }
-    .mat-card-actions{
-        display: flex;
-    }
+.wizard-container {
+  height: 100%;
+  padding: 0;
 
-    .example-right-align {
-        text-align: right;
+
+
+  form.targeting{
+    display: flex;
+    flex-wrap: wrap;
+    p {
+      min-width: 33%;
+    }
+  }
+  @media (max-width: 623px) {
+    form.targeting{
+      display: flex;
+      flex-wrap: wrap;
+      p {
+        margin: 3px 20px;
+        min-width: 100%;
       }
-      
-      input.example-right-align::-webkit-outer-spin-button,
-      input.example-right-align::-webkit-inner-spin-button {
-        display: none;
-      }
-      
-      input.example-right-align {
-        -moz-appearance: textfield;
-      }
+    }
+  }
+
+
+
+  form.targeting .mat-form-field {
+    min-width: 90%;
+  }
+  .mat-form-field-type-mat-chip-list {
+    width: 100%;
+    .mat-chip.mat-standard-chip {
+      min-height: 25px;
+      font-size: 13px;
+    }
+  }
+  .spacer {
+    flex: 1 1 auto;
+  }
+  .mat-card-actions {
+    display: flex;
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    right: 20px;
+  }
+
+  .example-right-align {
+    text-align: right;
+  }
+
+  input.example-right-align::-webkit-outer-spin-button,
+  input.example-right-align::-webkit-inner-spin-button {
+    display: none;
+  }
+
+  input.example-right-align {
+    -moz-appearance: textfield;
+  }
+
+
 }
+
+
+

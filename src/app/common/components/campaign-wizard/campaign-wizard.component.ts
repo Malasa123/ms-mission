@@ -72,25 +72,15 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
     const { campaign } = changes;
     if (campaign) {
       this.setForm();
     }
-
   }
 
   get campainDetails() {
     return this.form.value;
   }
-
-
-
-
-
-
-
 
 
 

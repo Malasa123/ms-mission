@@ -5,6 +5,7 @@ export interface ICampaign {
     status?:string;
     dateRange?:IRange;
     bid?:number;
-    dailyBudget?:string;
+    dailyBudget?:number;
     devices?:Array<string>;
+    id?:string;
 }

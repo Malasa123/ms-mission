@@ -21,6 +21,15 @@
             display:flex;
             flex-direction: column;
             justify-content: center;
+            button{
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .login-btn-spinner::ng-deep circle{
+                stroke: #FFFFFF !important;
+            }
 
             mat-error{
                 text-align: center;
@@ -29,6 +38,5 @@
         }
     }
 
-
-
 }
+

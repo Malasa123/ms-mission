@@ -1,5 +1,3 @@
-import { environment } from './../environments/environment';
-import { LoginModule } from './views/login/login.module';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';

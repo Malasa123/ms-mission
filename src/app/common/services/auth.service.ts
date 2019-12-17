@@ -2,7 +2,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { IUser } from '../interfaces/user.model';
 import { from , Observable } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, map } from 'rxjs/operators';
 import { User } from 'firebase';
 
 
@@ -23,5 +23,11 @@ export class AuthService {
 
     get currentUser():Observable<User | null>{
         return this.fireAuth.user;
+    }
+    get isLoggedIn():Observable<boolean>{
+        return this.currentUser.pipe(map(user => {
+            if(user) return true;
+            return false;
+        }));
     }
 }

@@ -1,4 +1,48 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+@import "./assets/css/constants.scss";
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+@include mat-core();
+
+
+$bc-main: (
+	50: $ms-primary,
+	100: $ms-primary,
+	200: $ms-primary,
+	300: $ms-primary,
+	400: $ms-primary,
+	500: $ms-primary,
+	600: $ms-primary,
+	700: $ms-primary,
+	800: $ms-primary,
+	900: $ms-primary,
+	A100: $ms-primary,
+	A200: $ms-primary,
+	A400: $ms-primary,
+	A700: $ms-primary,
+	contrast: (
+		50: $ms-primary,
+		100: $ms-primary,
+		200: $ms-primary,
+		300: $ms-primary,
+		400: $ms-primary,
+		500: $ms-primary,
+		600: $ms-primary,
+		700: $ms-primary,
+		800: $ms-primary,
+		900: $ms-primary,
+		A100: $ms-primary,
+		A200: $ms-primary,
+		A400: $ms-primary,
+		A700: $ms-primary
+	)
+);
+
+// Default colors
+$my-app-primary: mat-palette($mat-blue, 500, 100, 800);
+$my-app-accent: mat-palette($bc-main, 400, 100, 800);
+
+$my-app-theme: mat-light-theme($my-app-primary, $my-app-accent);
+@include angular-material-theme($my-app-theme);

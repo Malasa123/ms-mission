@@ -1,6 +1,11 @@
 
 
 <div class="campaigns-table">
+        <span class="no-item-msg" *ngIf="!anyCampaigns && !searchControl.value ">No items avaliable</span>
+        <span class="no-item-msg" *ngIf="!anyCampaigns && searchControl.value  ">
+                <div>No items avaliable</div>
+                <div>Please refine your search</div>
+        </span>
         <mat-toolbar color="primary">
                         <mat-toolbar-row >
                             <mat-form-field class="example-form-field" floatLabel="never">
@@ -15,10 +20,11 @@
                                         </button>
 
                                     </mat-toolbar-row>
+                                    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
         </mat-toolbar>
  
                 <table mat-table [dataSource]="campgains" class="mat-elevation-z8">
-                    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 
                                               <!-- Name Column -->
                                               <ng-container matColumnDef="name">
@@ -28,7 +34,7 @@
                                             
                                               <!-- bid Column -->
                                               <ng-container matColumnDef="bid">
-                                                <th mat-header-cell *matHeaderCellDef> bid </th>
+                                                <th mat-header-cell *matHeaderCellDef> Bid </th>
                                                 <td mat-cell *matCellDef="let element"> {{element.bid}} </td>
                                               </ng-container>
                                             
@@ -51,7 +57,7 @@
                                               <ng-container matColumnDef="actions">
                                                 <th mat-header-cell *matHeaderCellDef></th>
                                                 <td mat-cell *matCellDef="let element">
-                                                        <mat-icon matTooltip="Devices" (click)="editCampaign(element)">edit</mat-icon>
+                                                        <mat-icon matTooltip="Edit" (click)="editCampaign(element)">edit</mat-icon>
                                                         <mat-icon matTooltip="{{getDevices(element)}}">info</mat-icon>
                                                 </td>
                                               </ng-container>

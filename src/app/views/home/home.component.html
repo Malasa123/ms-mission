@@ -1,11 +1,16 @@
       <mat-drawer-container class="home-container" [ngClass]="{'small-screen': isSmallScreen}">
         <mat-drawer [mode]="isSmallScreen ? 'over' : 'side'" #sidenav >
+                <div class="side-nav-header">
+                    <div class="img-wrapper">
+                            <img src="https://www.moonshot-marketing.com/wp-content/uploads/2018/01/logo.png">
+                    </div>
+                </div>
                 <mat-nav-list color="primary">
-                        <a mat-list-item [routerLink]="'campaign'">
+                        <a mat-list-item routerLinkActive="ms-r-active" [routerLink]="'campaign'">
                             <mat-icon >add</mat-icon>
                             <span class="link-label">Create campaign</span>
                        </a>
-                        <a mat-list-item [routerLink]="'campaigns'">
+                        <a mat-list-item routerLinkActive="ms-r-active" [routerLink]="'campaigns'">
                             <mat-icon>view_list</mat-icon>
                             <span class="link-label">Campaigns</span>
                        </a>

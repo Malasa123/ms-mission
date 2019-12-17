@@ -5,6 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
+import { ToasterService } from 'src/app/common/services/toaster.service';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class CampaignsComponent implements OnInit {
   loading: boolean = false;
 
 
-  constructor(private afs: CampaignService, private router: Router) { }
+  constructor(private afs: CampaignService, private router: Router, private toasterService: ToasterService) { }
 
   ngOnInit() {
     this.searchByTerm('');
@@ -40,13 +41,19 @@ export class CampaignsComponent implements OnInit {
     },
       error => {
         this.loading = false;
+        this.toasterService.error('Failed to fetch campaigns');
+
       });
     this.subscriptions.add(sub);
   }
-  
 
-  getDevices(campaign: ICampaign){
-     return campaign.devices && campaign.devices.length ? `Devices: ${campaign.devices.join(', ')}` : 'N/A'
+  get anyCampaigns(){
+    return this.campgains && this.campgains.length > 0;
+  }
+
+
+  getDevices(campaign: ICampaign) {
+    return campaign.devices && campaign.devices.length ? `Devices: ${campaign.devices.join(', ')}` : 'N/A'
   }
   editCampaign(campaign: ICampaign) {
     this.router.navigate(['home/campaign', campaign.id])

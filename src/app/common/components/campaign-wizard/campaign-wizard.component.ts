@@ -77,6 +77,10 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
     });
   }
 
+  get summeryDevices(){
+    return (this.devices && this.devices.length)? this.devices.join(', '):'N/A';
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     const { campaign } = changes;
     if (campaign) {

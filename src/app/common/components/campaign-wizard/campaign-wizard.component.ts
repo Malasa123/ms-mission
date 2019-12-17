@@ -35,7 +35,7 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   deviceCtrl = new FormControl();
   filteredDevices: Observable<string[]>;
-  devices: string[] = ['Mobile'];
+  devices: string[] = [];
   readonly FIRST_STEP = 0;
   readonly LAST_STEP = 2;
   

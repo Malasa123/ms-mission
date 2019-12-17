@@ -4,6 +4,7 @@ import { IUser } from '../interfaces/user.model';
 import { from , Observable } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { User } from 'firebase';
+import { MsDelay } from '../enums/delay.enum';
 
 
 @Injectable()
@@ -14,7 +15,7 @@ export class AuthService {
 
     login(user: IUser):Observable<firebase.auth.UserCredential> {
         return from(this.fireAuth.auth.signInWithEmailAndPassword(user.email, user.password))
-              .pipe(delay(1500));
+              .pipe(delay(MsDelay.Default));
     }
 
     signOut():Observable<void> {

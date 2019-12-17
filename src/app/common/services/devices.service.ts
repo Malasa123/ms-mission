@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { from  } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { FbCollections } from 'src/app/common/enums/fb-collections.enum';
+import { MsDelay } from '../enums/delay.enum';
 
 
 @Injectable()
@@ -14,7 +15,7 @@ export class DeviceService {
     }
 
     create(newDevice: string){
-      return from(this._collection$.add(newDevice)).pipe(delay(2500) );
+      return from(this._collection$.add(newDevice)).pipe(delay(MsDelay.Default) );
     }
 
     readAllAsync(){

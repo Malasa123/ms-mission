@@ -4,6 +4,7 @@ import { from } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { FbCollections } from 'src/app/common/enums/fb-collections.enum';
 import { ICampaign } from '../interfaces/campaign.model';
+import { MsDelay } from '../enums/delay.enum';
 
 
 @Injectable()
@@ -18,7 +19,7 @@ export class CampaignService {
     create(campaign: ICampaign) {
         let campainToCreate: ICampaign = this.mapDatesToString(campaign);
         return from(this._collection$.add(campainToCreate))
-            .pipe(delay(2500));
+            .pipe(delay(MsDelay.Default));
     }
 
     read(id: string) {
@@ -30,7 +31,7 @@ export class CampaignService {
     update(campaign: ICampaign) {
         let campainToUpdate: ICampaign = this.mapDatesToString(campaign);
         return from(this._collection$.doc(campainToUpdate.id).set(campainToUpdate))
-            .pipe(delay(2500));
+            .pipe(delay(MsDelay.Default));
     }
 
 
@@ -45,7 +46,7 @@ export class CampaignService {
                 .where('name', '>=', searchTerm)
                 .where('name', '<', end)
         } : null
-        return (query ? this.afs.collection<ICampaign>(FbCollections.Campaigns , query) : this._collection$)
+        return (query ? this.afs.collection<ICampaign>(FbCollections.Campaigns, query) : this._collection$)
             .snapshotChanges()
             .pipe(this.retriveWithId);
     }
@@ -58,7 +59,7 @@ export class CampaignService {
         });
     });
 
-    private readonly mapDatesToString = (campaign: ICampaign) => {
+    private readonly mapDatesToString = (campaign: ICampaign):ICampaign => {
         return {
             ...campaign, dateRange: {
                 end: campaign.dateRange.end.toString(),

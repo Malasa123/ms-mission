@@ -3,6 +3,9 @@
     height:100%;
     display: flex; 
     flex-direction: column;  
+    .create-btn{
+        color: #fff;
+    }
     table{
         width: 100%;
         .mat-column-actions.mat-cell{

@@ -5,6 +5,9 @@ $toolbar-height: 64px;
   display: flex;
   .mat-drawer {
     width: 215px;
+    .link-label{
+        padding: 0 5px;
+    }
   }
   .mat-drawer-content {
     width: calc(100% - 215px);

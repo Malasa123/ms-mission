@@ -14,7 +14,7 @@ export class AuthService {
 
     login(user: IUser):Observable<firebase.auth.UserCredential> {
         return from(this.fireAuth.auth.signInWithEmailAndPassword(user.email, user.password))
-              .pipe(delay(2500));
+              .pipe(delay(1500));
     }
 
     signOut():Observable<void> {

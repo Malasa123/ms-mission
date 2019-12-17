@@ -17,12 +17,6 @@ export class LoginComponent implements OnInit,OnDestroy {
   error: any = null;
   loading:boolean = false;
 
-  wrongCredentialErrors = [
-    'EMAIL_NOT_FOUND',
-    'INVALID_PASSWORD'
-  ]
-
-
   constructor(private _formBuilder: FormBuilder ,private auth:AuthService , private router:Router) { }
 
   ngOnInit() {
@@ -49,7 +43,7 @@ export class LoginComponent implements OnInit,OnDestroy {
 
   ngOnDestroy(): void {
     if(this.subscriptions.unsubscribe)
-    this.subscriptions.unsubscribe();
+       this.subscriptions.unsubscribe();
   }
 
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, Input, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { ICampaign } from '../../interfaces/campaign.model';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
@@ -7,6 +7,7 @@ import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { CustomValidators } from '../../utils/validators';
 
 @Component({
   selector: 'ms-campaign-wizard',
@@ -15,26 +16,30 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class CampaignWizardComponent implements OnInit, OnChanges {
 
-  readonly FIRST_STEP = 0;
-  readonly LAST_STEP = 2;
-
+  @Input() avaliableDevices: Array<string> = ['Mobile', 'Tablet', 'Desktop'];
+  @ViewChild('deviceInput', { static: false }) deviceInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
   @Input() isLinear = false;
   @Input() loading: boolean = false;
   @Output() onSave = new EventEmitter<ICampaign>();
-  @Input() campaign: ICampaign = {
-    dateRange: {
-      end: '',
-      start: '',
-    }
-  };
-
-
-  toggleLoading() {
-    this.loading = !this.loading;
-  }
-
+  @Input() campaign: ICampaign = {};
+  @Input() title: string = 'Create Campaign';
 
   form: FormGroup;
+
+  
+  visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  deviceCtrl = new FormControl();
+  filteredDevices: Observable<string[]>;
+  devices: string[] = ['Mobile'];
+  readonly FIRST_STEP = 0;
+  readonly LAST_STEP = 2;
+  
+
 
 
   constructor(private _formBuilder: FormBuilder) {
@@ -55,7 +60,8 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
       dateRange: {
         end: endDate,
         start: startDate
-      }
+      },
+      devices : this.devices ?  this.devices : []
     }
     this.onSave.emit(campaignToSave);
   }
@@ -64,10 +70,10 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
   setForm() {
     this.form = this._formBuilder.group({
       name: [this.campaign.name, Validators.required],
-      bid: [this.campaign.bid, Validators.required],
-      dailyBudget: [this.campaign.dailyBudget, Validators.required],
-      startDate: [this.campaign.dateRange ? this.campaign.dateRange.start : '', Validators.required],
-      endDate: [this.campaign.dateRange ? this.campaign.dateRange.end : '', Validators.required]
+      bid: [this.campaign.bid, [Validators.required,  CustomValidators.mustBeLessThan('dailyBudget' , 10)]],
+      dailyBudget: [this.campaign.dailyBudget, [Validators.required ,CustomValidators.mustBeGreaterThan('bid' , 10) ]],
+      startDate: [this.campaign.dateRange ? new Date(this.campaign.dateRange.start) : '', [Validators.required , CustomValidators.isTimeBefore('endDate')]],
+      endDate: [this.campaign.dateRange ? new Date(this.campaign.dateRange.end) : '', [Validators.required , CustomValidators.isTimeAfter('startDate')]]
     });
   }
 
@@ -82,26 +88,7 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
     return this.form.value;
   }
 
-
-
-
-  visible = true;
-  selectable = true;
-  removable = true;
-  addOnBlur = true;
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  deviceCtrl = new FormControl();
-  filteredDevices: Observable<string[]>;
-  devices: string[] = ['Mobile'];
-  @Input() avaliableDevices: Array<string> = ['Mobile', 'Tablet', 'Desktop'];
-
-  @ViewChild('deviceInput', { static: false }) deviceInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
-
-
   add(event: MatChipInputEvent): void {
-    // Add device only when MatAutocomplete is not open
-    // To make sure this does not conflict with OptionSelected Event
     if (!this.matAutocomplete.isOpen) {
       const input = event.input;
       const value = event.value;
@@ -143,3 +130,6 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
 
 
 }
+
+
+

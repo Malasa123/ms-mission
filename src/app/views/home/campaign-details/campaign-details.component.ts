@@ -4,7 +4,7 @@ import { ComponentEditor } from '../../../common/interfaces/editor.model';
 import { Subscription, Observable } from 'rxjs';
 import { ToasterService } from '../../../common/services/toaster.service';
 import { CampaignService } from '../../../common/services/campaign.service';
-import { Router, Route, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ms-campaign-details',
@@ -14,41 +14,37 @@ import { Router, Route, ActivatedRoute } from '@angular/router';
 export class CampaignDetailsComponent extends ComponentEditor<ICampaign> implements OnInit, OnDestroy {
 
   loading: boolean = false;
-  fromBackend: ICampaign = {};
+  campaign: ICampaign = {};
   subscriptions: Subscription = new Subscription();
   avaliableDevices$: Observable<Array<string>>;
-  campaignToUpdate: ICampaign;
+  id: string = null;
 
-  constructor(private cs: CampaignService, private toasterService: ToasterService, private route: ActivatedRoute
-
+  constructor(
+    private cs: CampaignService,
+    private toasterService: ToasterService,
+    private route: ActivatedRoute
+    , private router: Router
   ) {
     super();
   }
   ngOnInit(): void {
-    // this.avaliableDevices$ = this.ds.readAllAsync();
-    // let sub = this.ds.create('Mobile').subscribe(campaign => {
-    // });
-    // let sub = this.cs.readAll('').subscribe(campaign => {
-    //   this.fromBackend = campaign;
-    //   this.loading = false;
-    //   this.toasterService.success('Campaign was created successfully');
-    // });
-    //  this.subscriptions.add(sub);
     let sub = this.route.params.subscribe(params => {
-      const id = params['id'] as string;
-      if (id) this.fetchCampain(id);
+      this.id = params['id'] as string;
+      if (this.id) this.fetchCampain();
     });
     this.subscriptions.add(sub);
 
   }
-  fetchCampain(id: string) {
-    debugger
-    let sub = this.cs.read(id).subscribe(campaignToUpdate => {
-      this.fromBackend = { ...campaignToUpdate };
-      this.campaignToUpdate = { ...campaignToUpdate };
+  fetchCampain() {
+    let sub = this.cs.read(this.id).subscribe(campaignToUpdate => {
+      this.campaign = campaignToUpdate;
       this.isEditing = true;
     });
     this.subscriptions.add(sub);
+  }
+
+  get title(){
+    return this.isEditing ? 'Update campaign' : 'Create campaign';
   }
 
 
@@ -58,11 +54,12 @@ export class CampaignDetailsComponent extends ComponentEditor<ICampaign> impleme
   onCreate(item: ICampaign) {
     this.loading = true;
     let sub = this.cs.create(item).subscribe(ok => {
-      this.fromBackend = item;
+      this.campaign = item;
       this.loading = false;
       this.toasterService.success('Campaign was created successfully');
+      this.router.navigateByUrl('home/campaigns')
     }, (error) => {
-      this.toasterService.success('Failed to create campaign');
+      this.toasterService.error('Failed to create campaign');
       this.loading = false;
     });
     this.subscriptions.add(sub);
@@ -70,19 +67,24 @@ export class CampaignDetailsComponent extends ComponentEditor<ICampaign> impleme
 
   onUpdate(item: ICampaign) {
     this.loading = true;
-    let sub = this.cs.update({ ...this.campaignToUpdate, ...item }).subscribe(ok => {
-      this.fromBackend = item;
+    let sub = this.cs.update({ ...item, id: this.id }).subscribe(ok => {
+      this.campaign = item;
       this.loading = false;
+      this.id = null;
       this.toasterService.success('Campaign was updated successfully');
+      this.router.navigateByUrl('home/campaigns')
+
     }, (error) => {
-      this.toasterService.success('Failed to update campaign');
+      this.toasterService.error('Failed to update campaign');
       this.loading = false;
+      this.id = null;
     });
     this.subscriptions.add(sub);
   }
 
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    if (this.subscriptions.unsubscribe)
+      this.subscriptions.unsubscribe();
   }
 }

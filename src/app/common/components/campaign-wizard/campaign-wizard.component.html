@@ -1,7 +1,9 @@
-<mat-card class="wizard-container">
+<mat-card class="wizard-container" >
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
   <mat-toolbar color="primary">
     <mat-toolbar-row>
-      <span>Create campaign</span>
+      <span>{{title}}</span>
       <!-- <span class="spacer"></span>
                           
                                <button mat-icon-button >
@@ -19,6 +21,8 @@
           <mat-form-field appearance="legacy">
             <input matInput placeholder="Campaign name" formControlName="name" required>
             <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-error *ngIf="form?.get('name')?.invalid">Name required</mat-error>
+
           </mat-form-field>
         </p>
 
@@ -28,14 +32,19 @@
               class="example-right-align">
             <mat-icon matPrefix>attach_money</mat-icon>
             <span matSuffix>.00</span>
+            <mat-error *ngIf="form?.get('dailyBudget')?.errors?.greater">Daily budget must be at least 10 times higher than the bid</mat-error>
+            <mat-error *ngIf="form?.get('dailyBudget')?.errors?.required">Daily budget is required</mat-error>
+
           </mat-form-field>
         </p>
         <p>
           <mat-form-field appearance="legacy">
-            <input matInput placeholder="Bid(Maximum CPC)" type="number" formControlName="bid"
+            <input matInput placeholder="Bid(Maximum CPC)" type="number" min="0" formControlName="bid"
               class="example-right-align">
             <mat-icon matPrefix>attach_money</mat-icon>
             <span matSuffix>.00</span>
+            <mat-error *ngIf="form?.get('bid')?.errors?.less">Bid must be at least 10 times lower than the daily budget</mat-error>
+            <mat-error *ngIf="form?.get('bid')?.errors?.required">Bid is required</mat-error>
           </mat-form-field>
         </p>
         <p>
@@ -43,6 +52,10 @@
             <input matInput placeholder="Start Date" [matDatepicker]="pickerStart" formControlName="startDate">
             <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
             <mat-datepicker #pickerStart></mat-datepicker>
+            <mat-error *ngIf="form?.get('startDate')?.errors?.isTimeBefore || form?.get('endDate')?.errors?.isTimeAfter">Start date must before end date</mat-error>
+            <mat-error *ngIf="form?.get('startDate')?.errors?.required">Start date required</mat-error>
+
+
           </mat-form-field>
         </p>
         <p>
@@ -50,6 +63,9 @@
             <input matInput placeholder="End Date" [matDatepicker]="pickerEnd" formControlName="endDate">
             <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
             <mat-datepicker #pickerEnd></mat-datepicker>
+            <mat-error *ngIf="form?.get('endDate')?.errors?.isTimeAfter || form?.get('startDate')?.errors?.isTimeBefore">End date must after start date</mat-error>
+            <mat-error *ngIf="form?.get('endDate')?.errors?.required">End date required</mat-error>
+
           </mat-form-field>
         </p>
       </form>
@@ -118,7 +134,7 @@
     <button mat-button *ngIf="stepper.selectedIndex !== FIRST_STEP" (click)="stepper.previous()">Back</button>
 
     <span class="spacer"></span>
-    <button mat-button *ngIf="stepper.selectedIndex !== LAST_STEP; else save" (click)="stepper.next()">Next</button>
+    <button mat-button *ngIf="stepper.selectedIndex !== LAST_STEP; else save" [disabled]="!form.valid " (click)="stepper.next()">Next</button>
     <ng-template #save>
       <button mat-button color="primary" [disabled]="!form.valid || loading" (click)="submit()">
         <span *ngIf="!loading; else loader">Save</span>

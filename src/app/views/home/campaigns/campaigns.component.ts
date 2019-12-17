@@ -1,11 +1,10 @@
 import { CampaignService } from '../../../common/services/campaign.service';
 import { Component, OnInit } from '@angular/core';
 import { ICampaign } from 'src/app/common/interfaces/campaign.model';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { FbCollections } from 'src/app/common/enums/fb-collections.enum';
-
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
 
 
 @Component({
@@ -15,24 +14,45 @@ import { Router } from '@angular/router';
 })
 export class CampaignsComponent implements OnInit {
   subscriptions: Subscription = new Subscription();
-  displayedColumns: Array<string> = ['ID' , 'name', 'bid', 'dailyBudget',  'start' , 'end' , 'actions' ]
-  campgains: Array<ICampaign> = [{
-    name: 'Campaign name',
-    bid: 100,
-    dailyBudget: 13,
-    status: 'sda',
-  }]
+  displayedColumns: Array<string> = ['name', 'bid', 'dailyBudget', 'start', 'end', 'actions']
+  campgains: Array<ICampaign> = []
   campaigns$: Observable<ICampaign | unknown>;
-  collection$: AngularFirestoreCollection<ICampaign>;
-  constructor(private afs: CampaignService ,private router:Router) { }
+  searchControl = new FormControl();
+  loading: boolean = false;
+
+
+  constructor(private afs: CampaignService, private router: Router) { }
 
   ngOnInit() {
-    this.campaigns$ = this.afs.readAllAsync();
+    this.searchByTerm('');
+    let sub = this.searchControl.valueChanges.pipe(
+      debounceTime(300)
+    )
+      .subscribe(this.searchByTerm);
+    this.subscriptions.add(sub);
   }
 
+  searchByTerm = (term: string) => {
+    this.loading = true;
+    let sub = this.afs.readAllAsync(term).subscribe(campaigns => {
+      this.campgains = campaigns;
+      this.loading = false;
+    },
+      error => {
+        this.loading = false;
+      });
+    this.subscriptions.add(sub);
+  }
+  
 
-  editCampaign(campaign:ICampaign){
-    this.router.navigate(['home/campaign' , campaign.id])
+  getDevices(campaign: ICampaign){
+     return campaign.devices && campaign.devices.length ? `Devices: ${campaign.devices.join(', ')}` : 'N/A'
+  }
+  editCampaign(campaign: ICampaign) {
+    this.router.navigate(['home/campaign', campaign.id])
+  }
+  goToCreatePage() {
+    this.router.navigateByUrl('home/campaign')
   }
 
   ngOnDestroy(): void {

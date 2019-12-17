@@ -1,6 +1,6 @@
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
-import { from , Observable } from 'rxjs';
+import { from  } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { FbCollections } from 'src/app/common/enums/fb-collections.enum';
 

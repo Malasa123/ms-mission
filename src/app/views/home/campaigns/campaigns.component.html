@@ -3,51 +3,56 @@
 <div class="campaigns-table">
         <mat-toolbar color="primary">
                         <mat-toolbar-row >
-                                        <span>Campaigns</span>
+                            <mat-form-field class="example-form-field" floatLabel="never">
+                                <input matInput type="text" placeholder="Search by name"   [formControl]="searchControl">
+                                <button mat-button *ngIf="searchControl.value" matSuffix mat-icon-button aria-label="Clear" (click)="searchControl.setValue('')">
+                                  <mat-icon>{{searchControl.value ? 'close' : 'search'}}</mat-icon>
+                                </button>
+                              </mat-form-field>
                                         <span class="spacer"></span>
-                                        <span class="email-display" (click)="add()">item number:{{campgains.length}}</span>
+                                        <button (click)="goToCreatePage()"  mat-icon-button color="primary">
+                                          <mat-icon class="create-btn" matTooltip="Create campaign">add</mat-icon>
+                                        </button>
+
                                     </mat-toolbar-row>
         </mat-toolbar>
  
-                <table mat-table [dataSource]="campaigns$ |async " class="mat-elevation-z8">
+                <table mat-table [dataSource]="campgains" class="mat-elevation-z8">
+                    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 
-                                                                                                                                    <!-- Name Column -->
-                                              <ng-container matColumnDef="ID">
-                                                        <th mat-header-cell *matHeaderCellDef> ID </th>
-                                                        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-                                                      </ng-container>
                                               <!-- Name Column -->
                                               <ng-container matColumnDef="name">
                                                 <th mat-header-cell *matHeaderCellDef> Name </th>
                                                 <td mat-cell *matCellDef="let element"> {{element.name}} </td>
                                               </ng-container>
                                             
-                                              <!-- Weight Column -->
+                                              <!-- bid Column -->
                                               <ng-container matColumnDef="bid">
                                                 <th mat-header-cell *matHeaderCellDef> bid </th>
                                                 <td mat-cell *matCellDef="let element"> {{element.bid}} </td>
                                               </ng-container>
                                             
-                                              <!-- Symbol Column -->
+                                              <!-- Daily Column -->
                                               <ng-container matColumnDef="dailyBudget">
                                                 <th mat-header-cell *matHeaderCellDef> Daily Budget</th>
                                                 <td mat-cell *matCellDef="let element"> {{element.dailyBudget}} </td>
                                               </ng-container>
-                                              <!-- Status Column -->
+                                              <!-- Start Column -->
                                               <ng-container matColumnDef="start">
                                                 <th mat-header-cell *matHeaderCellDef> Start at </th>
-                                                <td mat-cell *matCellDef="let element"> {{element?.dateRange?.start?.seconds | date : 'dd/MM/yy'}} </td>
+                                                <td mat-cell *matCellDef="let element"> {{element?.dateRange?.start | date : 'dd/MM/yy'}} </td>
                                               </ng-container>
-                                              <!-- Status Column -->
+                                              <!-- Expired Column -->
                                               <ng-container matColumnDef="end">
                                                 <th mat-header-cell *matHeaderCellDef> Expired at </th>
-                                                <td mat-cell *matCellDef="let element"> {{element?.dateRange?.end?.seconds | date : 'dd/MM/yy'}} </td>
+                                                <td mat-cell *matCellDef="let element"> {{element?.dateRange?.end | date : 'dd/MM/yy'}} </td>
                                               </ng-container>
                                               <!-- Actions Column -->
                                               <ng-container matColumnDef="actions">
                                                 <th mat-header-cell *matHeaderCellDef></th>
                                                 <td mat-cell *matCellDef="let element">
-                                                        <mat-icon (click)="editCampaign(element)">edit</mat-icon>
+                                                        <mat-icon matTooltip="Devices" (click)="editCampaign(element)">edit</mat-icon>
+                                                        <mat-icon matTooltip="{{getDevices(element)}}">info</mat-icon>
                                                 </td>
                                               </ng-container>
 

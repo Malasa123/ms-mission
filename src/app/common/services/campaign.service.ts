@@ -1,6 +1,6 @@
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import { from } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { FbCollections } from 'src/app/common/enums/fb-collections.enum';
 import { ICampaign } from '../interfaces/campaign.model';
@@ -9,7 +9,6 @@ import { ICampaign } from '../interfaces/campaign.model';
 @Injectable()
 export class CampaignService {
 
-
     private _collection$: AngularFirestoreCollection<ICampaign>;
 
     constructor(private afs: AngularFirestore) {
@@ -17,7 +16,8 @@ export class CampaignService {
     }
 
     create(campaign: ICampaign) {
-        return from(this._collection$.add(campaign))
+        let campainToCreate: ICampaign = this.mapDatesToString(campaign);
+        return from(this._collection$.add(campainToCreate))
             .pipe(delay(2500));
     }
 
@@ -27,8 +27,9 @@ export class CampaignService {
             .pipe(map(doc => doc.data()));
     }
 
-    update(item: ICampaign) {
-        return from(this._collection$.doc(item.id).set(item))
+    update(campaign: ICampaign) {
+        let campainToUpdate: ICampaign = this.mapDatesToString(campaign);
+        return from(this._collection$.doc(campainToUpdate.id).set(campainToUpdate))
             .pipe(delay(2500));
     }
 
@@ -37,8 +38,14 @@ export class CampaignService {
         return from(this._collection$.get());
     }
 
-    readAllAsync() {
-        return this._collection$
+    readAllAsync(searchTerm: string = '') {
+        const end = searchTerm.replace(/.$/, c => String.fromCharCode(c.charCodeAt(0) + 1));
+        let query = searchTerm ? (ref) => {
+            return ref.orderBy('name')
+                .where('name', '>=', searchTerm)
+                .where('name', '<', end)
+        } : null
+        return (query ? this.afs.collection<ICampaign>(FbCollections.Campaigns , query) : this._collection$)
             .snapshotChanges()
             .pipe(this.retriveWithId);
     }
@@ -50,6 +57,15 @@ export class CampaignService {
             return { id, ...data };
         });
     });
+
+    private readonly mapDatesToString = (campaign: ICampaign) => {
+        return {
+            ...campaign, dateRange: {
+                end: campaign.dateRange.end.toString(),
+                start: campaign.dateRange.start.toString()
+            }
+        }
+    }
 
 
 }

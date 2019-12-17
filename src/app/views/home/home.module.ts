@@ -1,3 +1,4 @@
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CampaignService } from '../../common/services/campaign.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -22,7 +23,8 @@ import { DeviceService } from '../../common/services/devices.service';
         CampaignWizardModule,
         MatListModule,
         MatToolbarModule,
-        MatIconModule
+        MatIconModule,
+        MatTooltipModule
     ],
     declarations: [
         HomeComponent,

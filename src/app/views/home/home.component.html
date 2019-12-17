@@ -1,27 +1,3 @@
-<!-- <div class="home-container">
-        <ms-sidenav></ms-sidenav>
-
-
-
-    <div class="left-main">
-            <mat-toolbar>
-                    <mat-toolbar-row>
-                        <span class="spacer"></span>
-                        <span class="email-display">{{(auth.currentUser | async)?.email}}</span>
-                        <mat-icon aria-hidden="false" title="Sign out" (click)="signOut()" aria-label="Sign out">exit_to_app</mat-icon>
-                    </mat-toolbar-row>
-            
-                </mat-toolbar>
-                <div class="page-content">
-                        <router-outlet></router-outlet>
-                </div>
-    </div>
-
-
-
-
-</div> -->
-
       <mat-drawer-container class="home-container" [ngClass]="{'small-screen': isSmallScreen}">
         <mat-drawer [mode]="isSmallScreen ? 'over' : 'side'" #sidenav >
                 <mat-nav-list color="primary">
@@ -41,7 +17,7 @@
                                 <mat-icon *ngIf="isSmallScreen"   (click)="sidenav.open()" aria-label="open side navbar">menu</mat-icon>
                             <span class="spacer"></span>
                             <span class="email-display">{{(auth.currentUser | async)?.email}}</span>
-                            <mat-icon aria-hidden="false" title="Sign out" (click)="signOut()" aria-label="Sign out">exit_to_app</mat-icon>
+                            <mat-icon aria-hidden="false" matTooltip="Sign out"  (click)="signOut()" aria-label="Sign out">exit_to_app</mat-icon>
                         </mat-toolbar-row>
                 
                     </mat-toolbar>

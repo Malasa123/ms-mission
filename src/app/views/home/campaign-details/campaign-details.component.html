@@ -1,6 +1,7 @@
 <div class="campaign-details">
         <ms-campaign-wizard 
-        [campaign]="fromBackend" 
-        [loading]="loading" 
-        (onSave)="save($event)"></ms-campaign-wizard>
+                [campaign]="campaign" 
+                [title]="title"
+                [loading]="loading" 
+                (onSave)="save($event)"></ms-campaign-wizard>
 </div>

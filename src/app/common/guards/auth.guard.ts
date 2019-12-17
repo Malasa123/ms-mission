@@ -2,7 +2,7 @@ import { AuthService } from 'src/app/common/services/auth.service';
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 
 @Injectable()
@@ -30,8 +30,9 @@ export class UnauthenticatedGuard implements CanActivate {
   }
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> {
     return this.auth.isLoggedIn.pipe(
-        tap(isLoggeedIn => {
-            if(isLoggeedIn) this.router.navigateByUrl('/home/campaigns');;
+        map(isLoggeedIn => {
+            if(isLoggeedIn) this.router.navigateByUrl('/home/campaigns');
+            return !isLoggeedIn
         })
     )
   }

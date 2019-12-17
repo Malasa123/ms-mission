@@ -1,3 +1,5 @@
+@import "../../../assets/css/constants.scss";
+
 .login-container{
     height:100%;
     width:100%;
@@ -28,7 +30,7 @@
                 justify-content: center;
             }
             .login-btn-spinner::ng-deep circle{
-                stroke: #FFFFFF !important;
+                stroke: $ms-white !important;
             }
 
             mat-error{

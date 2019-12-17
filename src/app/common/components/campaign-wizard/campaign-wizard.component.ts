@@ -77,7 +77,7 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
     });
   }
 
-  get summeryDevices(){
+  get summeryDevices():string{
     return (this.devices && this.devices.length)? this.devices.join(', '):'N/A';
   }
 

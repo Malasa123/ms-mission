@@ -139,7 +139,7 @@
     <button mat-button *ngIf="stepper.selectedIndex !== FIRST_STEP" (click)="stepper.previous()">Back</button>
 
     <span class="spacer"></span>
-    <button mat-button *ngIf="stepper.selectedIndex !== LAST_STEP; else save" [disabled]="!form.valid " (click)="stepper.next()">Next</button>
+    <button mat-button *ngIf="stepper.selectedIndex !== LAST_STEP; else save" [disabled]="!form.valid || (stepper.selectedIndex == SECOND_STEP && !anyDevices) " (click)="stepper.next()">Next</button>
     <ng-template #save>
       <button mat-button color="primary" [disabled]="!form.valid || loading" (click)="submit()">
         <span *ngIf="!loading; else loader">Save</span>

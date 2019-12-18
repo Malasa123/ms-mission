@@ -37,6 +37,7 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
   filteredDevices: Observable<string[]>;
   devices: string[] = [];
   readonly FIRST_STEP = 0;
+  readonly SECOND_STEP = 1;
   readonly LAST_STEP = 2;
   
 
@@ -78,13 +79,18 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
   }
 
   get summeryDevices():string{
-    return (this.devices && this.devices.length)? this.devices.join(', '):'N/A';
+    return this.anyDevices ? this.devices.join(', '):'N/A';
+  }
+
+  get anyDevices():boolean{
+    return (this.devices && this.devices.length !== 0);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     const { campaign } = changes;
     if (campaign) {
       this.setForm();
+      this.devices = this.campaign.devices.slice();
     }
   }
 

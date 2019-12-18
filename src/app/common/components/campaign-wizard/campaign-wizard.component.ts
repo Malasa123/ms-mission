@@ -27,26 +27,29 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
 
   form: FormGroup;
 
-  
+  // autocomplete
   visible = true;
   selectable = true;
   removable = true;
   addOnBlur = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   deviceCtrl = new FormControl();
-  filteredDevices: Observable<string[]>;
   devices: string[] = [];
   readonly FIRST_STEP = 0;
   readonly SECOND_STEP = 1;
   readonly LAST_STEP = 2;
-  
+  private isSelected = (device) => this.devices.indexOf(device) === -1;
+
+
 
 
 
   constructor(private _formBuilder: FormBuilder) {
-    this.filteredDevices = this.deviceCtrl.valueChanges.pipe(
-      startWith(null),
-      map((device: string | null) => device ? this._filter(device) : this.avaliableDevices.slice()));
+  }
+
+  get filterDevices(){
+    let filteredDevices = this.avaliableDevices.slice().filter(this.isSelected);
+    return filteredDevices;
   }
 
 
@@ -62,7 +65,7 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
         end: endDate,
         start: startDate
       },
-      devices : this.devices ?  this.devices : []
+      devices: this.devices ? this.devices : []
     }
     this.onSave.emit(campaignToSave);
   }
@@ -71,18 +74,18 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
   setForm() {
     this.form = this._formBuilder.group({
       name: [this.campaign.name, Validators.required],
-      bid: [this.campaign.bid, [Validators.required,  CustomValidators.mustBeLessThan('dailyBudget' , 10)]],
-      dailyBudget: [this.campaign.dailyBudget, [Validators.required ,CustomValidators.mustBeGreaterThan('bid' , 10) ]],
-      startDate: [this.campaign.dateRange ? new Date(this.campaign.dateRange.start) : '', [Validators.required , CustomValidators.isTimeBefore('endDate')]],
-      endDate: [this.campaign.dateRange ? new Date(this.campaign.dateRange.end) : '', [Validators.required , CustomValidators.isTimeAfter('startDate')]]
+      bid: [this.campaign.bid, [Validators.required, CustomValidators.mustBeLessThan('dailyBudget', 10)]],
+      dailyBudget: [this.campaign.dailyBudget, [Validators.required, CustomValidators.mustBeGreaterThan('bid', 10)]],
+      startDate: [this.campaign.dateRange ? new Date(this.campaign.dateRange.start) : '', [Validators.required, CustomValidators.isTimeBefore('endDate')]],
+      endDate: [this.campaign.dateRange ? new Date(this.campaign.dateRange.end) : '', [Validators.required, CustomValidators.isTimeAfter('startDate')]]
     });
   }
 
-  get summeryDevices():string{
-    return this.anyDevices ? this.devices.join(', '):'N/A';
+  get summeryDevices(): string {
+    return this.anyDevices ? this.devices.join(', ') : 'N/A';
   }
 
-  get anyDevices():boolean{
+  get anyDevices(): boolean {
     return (this.devices && this.devices.length !== 0);
   }
 
@@ -90,7 +93,7 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
     const { campaign } = changes;
     if (campaign) {
       this.setForm();
-      this.devices = this.campaign.devices.slice();
+      this.devices = this.campaign.devices ? this.campaign.devices.slice() : [];
     }
   }
 
@@ -131,11 +134,7 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
     this.deviceCtrl.setValue(null);
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
 
-    return this.avaliableDevices.filter(device => device.toLowerCase().indexOf(filterValue) === 0);
-  }
 
 
 

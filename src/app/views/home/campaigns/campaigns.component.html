@@ -18,7 +18,6 @@
                                         <button (click)="goToCreatePage()"  mat-icon-button color="primary">
                                           <mat-icon class="create-btn" matTooltip="Create campaign">add</mat-icon>
                                         </button>
-
                                     </mat-toolbar-row>
                                     <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 
@@ -58,7 +57,7 @@
                                                 <th mat-header-cell *matHeaderCellDef></th>
                                                 <td mat-cell *matCellDef="let element">
                                                         <mat-icon matTooltip="Edit" (click)="editCampaign(element)">edit</mat-icon>
-                                                        <mat-icon matTooltip="{{getDevices(element)}}">info</mat-icon>
+                                                        <mat-icon matTooltip="{{cachedDevices[element.id]}}">info</mat-icon>
                                                 </td>
                                               </ng-container>
 

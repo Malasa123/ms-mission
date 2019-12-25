@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { ToasterService } from 'src/app/common/services/toaster.service';
+import { IDictionary } from 'src/app/common/interfaces/dictionary.model';
 
 
 @Component({
@@ -15,14 +16,17 @@ import { ToasterService } from 'src/app/common/services/toaster.service';
 })
 export class CampaignsComponent implements OnInit {
   subscriptions: Subscription = new Subscription();
-  displayedColumns: Array<string> = ['name', 'bid', 'dailyBudget', 'start', 'end', 'actions']
+  displayedColumns: Array<string> = ['name', 'bid', 'dailyBudget', 'start', 'end', 'actions'];
   campgains: Array<ICampaign> = []
+  cachedDevices: IDictionary<string>  = {};
   campaigns$: Observable<ICampaign | unknown>;
   searchControl = new FormControl();
   loading: boolean = false;
 
 
-  constructor(private afs: CampaignService, private router: Router, private toasterService: ToasterService) { }
+  constructor(private afs: CampaignService, private router: Router, private toasterService: ToasterService) { 
+    this.cachedDevices;
+  }
 
   ngOnInit() {
     this.searchByTerm('');
@@ -37,6 +41,9 @@ export class CampaignsComponent implements OnInit {
     this.loading = true;
     let sub = this.afs.readAllAsync(term).subscribe(campaigns => {
       this.campgains = campaigns;
+      this.campgains.forEach(c => {
+       this.cachedDevices[c.id] =  this.getDevices(c);
+      })
       this.loading = false;
     },
       error => {
@@ -52,7 +59,7 @@ export class CampaignsComponent implements OnInit {
   }
 
 
-  getDevices(campaign: ICampaign) {
+  private getDevices(campaign: ICampaign) {
     return campaign.devices && campaign.devices.length ? `Devices: ${campaign.devices.join(', ')}` : 'N/A'
   }
   editCampaign(campaign: ICampaign) {

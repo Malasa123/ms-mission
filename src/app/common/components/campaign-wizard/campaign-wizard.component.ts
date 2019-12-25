@@ -1,12 +1,10 @@
 import { Component, OnInit, ElementRef, ViewChild, Input, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ICampaign } from '../../interfaces/campaign.model';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
 import { CustomValidators } from '../../utils/validators';
 
 @Component({

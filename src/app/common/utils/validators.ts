@@ -1,6 +1,14 @@
 import { Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 
 export class CustomValidators extends Validators{
+  static condition(condition:Function): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+        if (!condition()) {
+            return { 'condition': true };
+        }
+        return null;
+    };
+  }
 
     static mustBeLessThan( prop:string , number: number = 1): ValidatorFn {
       return (control: AbstractControl): { [key: string]: boolean } | null => {

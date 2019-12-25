@@ -22,6 +22,7 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
   @Output() onSave = new EventEmitter<ICampaign>();
   @Input() campaign: ICampaign = {};
   @Input() title: string = 'Create Campaign';
+  
 
   form: FormGroup;
 
@@ -77,6 +78,19 @@ export class CampaignWizardComponent implements OnInit, OnChanges {
       startDate: [this.campaign.dateRange ? new Date(this.campaign.dateRange.start) : '', [Validators.required, CustomValidators.isTimeBefore('endDate')]],
       endDate: [this.campaign.dateRange ? new Date(this.campaign.dateRange.end) : '', [Validators.required, CustomValidators.isTimeAfter('startDate')]]
     });
+  }
+
+  updateBudgetValidation(){
+    this.updateValidity('dailyBudget');
+    this.updateValidity('bid');
+  }
+  updateDateRangeValidation(){
+    this.updateValidity('startDate');
+    this.updateValidity('endDate');
+  }
+
+  updateValidity(controlName:string){
+    this.form.get(controlName).updateValueAndValidity({onlySelf : false});
   }
 
   get summeryDevices(): string {

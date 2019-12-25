@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
 
   setDrawer() {
     if (this.sidenav)
-      this.isSmallScreen ? this.sidenav.close() : this.sidenav.open();
+        this.isSmallScreen ? this.sidenav.close() : this.sidenav.open();
   }
 
 

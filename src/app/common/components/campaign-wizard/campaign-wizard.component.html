@@ -4,11 +4,6 @@
   <mat-toolbar color="primary">
     <mat-toolbar-row>
       <span>{{title}}</span>
-      <!-- <span class="spacer"></span>
-                          
-                               <button mat-icon-button >
-                                <mat-icon>add</mat-icon>
-                              </button> -->
     </mat-toolbar-row>
   </mat-toolbar>
   <mat-horizontal-stepper [linear]="isLinear" [formGroup]="form" #stepper>
@@ -28,7 +23,9 @@
 
         <p>
           <mat-form-field appearance="legacy">
-            <input matInput placeholder="Daily Budget" type="number" formControlName="dailyBudget"
+            <input
+            (change)="updateBudgetValidation()"
+            matInput placeholder="Daily Budget" type="number" formControlName="dailyBudget"
               class="example-right-align">
             <mat-icon matPrefix>attach_money</mat-icon>
             <span matSuffix>.00</span>
@@ -39,7 +36,9 @@
         </p>
         <p>
           <mat-form-field appearance="legacy">
-            <input matInput placeholder="Bid(Maximum CPC)" type="number" min="0" formControlName="bid"
+            <input matInput
+            (change)="updateBudgetValidation()"
+             placeholder="Bid(Maximum CPC)" type="number" min="0" formControlName="bid"
               class="example-right-align">
             <mat-icon matPrefix>attach_money</mat-icon>
             <span matSuffix>.00</span>
@@ -48,10 +47,11 @@
           </mat-form-field>
         </p>
         <p>
-          <mat-form-field appearance="legacy">
+          <mat-form-field appearance="legacy" (change)="updateDateRangeValidation()">
             <input matInput placeholder="Start Date" [matDatepicker]="pickerStart" formControlName="startDate">
             <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-            <mat-datepicker #pickerStart></mat-datepicker>
+            <mat-datepicker #pickerStart 
+            (closed)="updateDateRangeValidation()"></mat-datepicker>
             <mat-error *ngIf="form?.get('startDate')?.errors?.isTimeBefore || form?.get('endDate')?.errors?.isTimeAfter">Start date must before end date</mat-error>
             <mat-error *ngIf="form?.get('startDate')?.errors?.required">Start date required</mat-error>
 
@@ -60,9 +60,11 @@
         </p>
         <p>
           <mat-form-field appearance="legacy">
-            <input matInput placeholder="End Date" [matDatepicker]="pickerEnd" formControlName="endDate">
+            <input matInput placeholder="End Date" 
+            (change)="updateDateRangeValidation()"
+             [matDatepicker]="pickerEnd" formControlName="endDate">
             <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-            <mat-datepicker #pickerEnd></mat-datepicker>
+            <mat-datepicker (closed)="updateDateRangeValidation()" #pickerEnd></mat-datepicker>
             <mat-error *ngIf="form?.get('endDate')?.errors?.isTimeAfter || form?.get('startDate')?.errors?.isTimeBefore">End date must after start date</mat-error>
             <mat-error *ngIf="form?.get('endDate')?.errors?.required">End date required</mat-error>
 
